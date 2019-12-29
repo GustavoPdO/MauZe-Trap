@@ -149,7 +149,6 @@ public class TileBehaviour : MonoBehaviour
 
     public void setWall(Enums.Direction direction)
     {
-        Debug.Log(direction);
         switch(direction){
             case Enums.Direction.North:
                 northWall = Enums.WallType.Concrete;

@@ -4,13 +4,22 @@ using UnityEditor;
 [CustomEditor(typeof(LevelGrid))]
 public class LevelGridEditor : Editor
 {
+
+    int test = 0;
+    string[] options = new string[3] {"1", "2", "3"};
+    LevelGrid levelGrid;
+
+    private void OnEnable() {
+        levelGrid = (LevelGrid)target;
+        levelGrid.tile = EditorGUIUtility.Load("Assets/Prefabs/Scenarios/Floor.prefab") as GameObject;
+        levelGrid.spawn = EditorGUIUtility.Load("Assets/Prefabs/Characters/XicoGuita.prefab") as GameObject;
+    }
+
     public override void OnInspectorGUI()
     {
         //DrawDefaultInspector();
 
-        LevelGrid levelGrid = (LevelGrid)target;
-        levelGrid.tile = EditorGUIUtility.Load("Assets/Prefabs/Scenarios/Floor.prefab") as GameObject;
-        levelGrid.rat = EditorGUIUtility.Load("Assets/Prefabs/Characters/XicoGuita.prefab") as GameObject;
+        levelGrid.gridCreated = EditorGUILayout.Toggle("grid", levelGrid.gridCreated);
 
         GUILayout.Label("Grid Options", EditorStyles.boldLabel);
         levelGrid.xSize = EditorGUILayout.IntField("X Size", levelGrid.xSize);
@@ -26,18 +35,18 @@ public class LevelGridEditor : Editor
             levelGrid.DestroyGrid();
         }
 
+        EditorGUI.BeginChangeCheck();
         GUILayout.Space(20);
-        GUILayout.Label("Rat Options", EditorStyles.boldLabel);
-
-        levelGrid.ratSpawn = EditorGUILayout.ObjectField("Rat Spawn", levelGrid.ratSpawn, typeof(Transform), true) as Transform;
-        //levelGrid.ratYAngle = EditorGUILayout.FloatField("Rat Spawn Angle", levelGrid.ratYAngle);
+        GUILayout.Label("Spawn Position", EditorStyles.boldLabel);
+        levelGrid.xSpawn = EditorGUILayout.IntSlider("X Position", levelGrid.xSpawn, 0, levelGrid.xSize-1);
+        levelGrid.ySpawn = EditorGUILayout.IntSlider("Y Position", levelGrid.ySpawn, 0, levelGrid.ySize-1);
         levelGrid.ratDirection = (Enums.Direction)EditorGUILayout.EnumPopup("Rat Direction", levelGrid.ratDirection);
 
-
-        if(GUILayout.Button("Place Rat"))
+        if(EditorGUI.EndChangeCheck())
         {
-            levelGrid.PlaceRat();
+            levelGrid.SetSpawn();
         }
+      
+    }   
     
-    }
 }
