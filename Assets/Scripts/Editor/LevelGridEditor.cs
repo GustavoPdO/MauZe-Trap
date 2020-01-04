@@ -5,7 +5,6 @@ using UnityEditor;
 public class LevelGridEditor : Editor
 {
 
-    int test = 0;
     string[] options = new string[3] {"1", "2", "3"};
     LevelGrid levelGrid;
 
@@ -18,8 +17,6 @@ public class LevelGridEditor : Editor
     public override void OnInspectorGUI()
     {
         //DrawDefaultInspector();
-
-        levelGrid.gridCreated = EditorGUILayout.Toggle("grid", levelGrid.gridCreated);
 
         GUILayout.Label("Grid Options", EditorStyles.boldLabel);
         levelGrid.xSize = EditorGUILayout.IntField("X Size", levelGrid.xSize);

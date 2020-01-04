@@ -12,27 +12,28 @@ public class CheeseMovement : MonoBehaviour
     private int sightDistance = 0;
 
     [SerializeField]
-    private Transform cheeseMesh;
+    private Transform cheeseTransform;
     [SerializeField]
     private Rigidbody cheeseRB;
 
-    [SerializeField]
-    private LevelManager levelManager;
+    //[SerializeField]
+    //private LevelManager levelManager;
 
     public void setLevelManager(LevelManager level){
-        levelManager = level;
+        //levelManager = level;
     }
 
     private void Start() {
         cheeseRB =  GetComponent(typeof(Rigidbody)) as Rigidbody;
+        cheeseTransform = cheeseRB.GetComponentInChildren<MeshRenderer>().transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        cheeseMesh.Rotate(Vector3.forward, -rotationSpeed);
+        cheeseTransform.Rotate(Vector3.forward, -rotationSpeed);
         cheeseRB.velocity = (transform.right * moveSpeed * Input.GetAxisRaw("Horizontal") * Time.fixedDeltaTime);
-        levelManager.leaveRat();
+        //levelManager.leaveRat();
 
         Debug.DrawRay(transform.position, -transform.forward * 11, Color.yellow, 1);
 
@@ -50,7 +51,7 @@ public class CheeseMovement : MonoBehaviour
             if(Physics.Raycast(transform.position, -transform.forward, out ratHit, wallHit.distance-0.1f,
                 1 << LayerMask.NameToLayer("Cheese")))
             {
-                levelManager.attractRat();
+                //levelManager.attractRat();
             }         
         }
     }

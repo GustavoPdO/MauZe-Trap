@@ -7,6 +7,5 @@ public class Managers : MonoBehaviour
     void Start()
     {
         GameManager gameManager = GameManager.Instance;
-        LevelManager levelManager = LevelManager.Instance;
     }
 }

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class Enums
+﻿public class Enums
 {
     public enum GameState {
         Menu = 0,
@@ -26,5 +22,12 @@ public static class Enums
     public enum Rotation {
         Clockwise = 90,
         CounterClockwise = -90
+    }
+
+    public enum TileObject {
+        Null = 0,
+        Tile = 1,
+        Rat = 2,
+        Cheese = 3
     }
 }

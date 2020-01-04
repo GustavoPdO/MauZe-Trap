@@ -14,17 +14,33 @@ public class LevelGrid : MonoBehaviour
     public int xSpawn = 0;
     public int ySpawn = 0;
 
-
     public int row = 10;
     public int column = 0;
 
     public Transform ratSpawn;
     public Enums.Direction ratDirection;
 
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.blue;
+        if(!gridCreated){
+            Gizmos.DrawSphere(new Vector3(0, 0, 0), 0.1f);
+        }
+        else
+        {
+            for(int row = 0; row < ySize; row++){
+                for(int column = 0; column <= xSize+1; column++){
+                    drawGizmos(row, column-1);
+                }
+            }
+        }
+        
+    }
+
     public void BuildGrid()
     {
         DestroyGrid();
-        for(int row = 0; row < ySize; row++){
+        for(int row = 0; row <= ySize; row++){
             parent = new GameObject();
             parent.name = "Row " + row;
             parent.transform.SetParent(transform);
@@ -82,5 +98,22 @@ public class LevelGrid : MonoBehaviour
         if(row == (ySize-1)){
             tileBehaviour.setWall(Enums.Direction.North);
         }   
+    }
+
+    private void drawGizmos(int row, int column)
+    {
+        if(row == 0){
+            Gizmos.DrawSphere(new Vector3(column, 0, -1), 0.1f);
+        }
+        if(column == 0){
+            Gizmos.DrawSphere(new Vector3(-1, 0, row), 0.1f);
+        }
+        if(column == (xSize-1)){
+            Gizmos.DrawSphere(new Vector3(xSize, 0, row), 0.1f);
+        }
+        if(row == (ySize-1)){
+            Gizmos.DrawSphere(new Vector3(column, 0, ySize), 0.1f);
+        }
+        
     }
 }

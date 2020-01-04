@@ -1,0 +1,75 @@
+TemplateContainer {
+    margin: 10px;
+}
+
+.header {
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
+
+.size-container {
+    flex-direction: row;
+    margin-bottom: 5px;
+}
+
+.size-container IntegerField {
+    margin-right: 30px;
+}
+
+.size-container Label {
+    min-width: 50px;
+}
+
+.size-container IntegerInput {
+    min-width: 50px;
+}
+
+.grid-map {
+    padding: 5px;
+    flex-direction: row;
+    width: 350px;
+    height: 350px;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-row {
+    align-content: center;
+}
+
+.grid {
+    width: 20px;
+    height: 20px;
+    margin: 1px;
+    background-image: none;
+    background-color: rgb(255, 255, 255);
+}
+
+.legend-container {
+    width: 350px;
+    margin-top: 5px;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.creation-button {
+    margin-top: 5px;
+    width: 350px;
+}
+
+.tile {
+    background-color: rgba(0,255, 0, .5);
+}
+
+.rat {
+    background-color: rgba(128, 96, 77, .75);
+}
+
+.corner {
+    background-color: rgb(255,165,0);
+}
+
+.cheese {
+    background-color: rgb(255, 255, 0);
+}
+
