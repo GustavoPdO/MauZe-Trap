@@ -6,52 +6,57 @@ using UnityEditor.UIElements;
 
 public class LevelCreator : EditorWindow
 {
-    int x_Size = 1;
-    int y_Size = 1;
+    // Grid config attributes
+    int x_Size;
+    int y_Size;
     int[,] gridMapping;
+    bool gridCreated = false;
 
+    // Game objects for spawning logic
     GameObject level;
     GameObject tile;
     GameObject spawn;
     GameObject pivot;
     GameObject cheese;
 
-    bool gridCreated = false;
-    public Enums.Direction ratDirection;
-
     [MenuItem("Tools/LevelCreator %_q")]
     public static void ShowWindow()
     {
+        // Instantitate the editor windows when selected on menu or called by shortkeys
         LevelCreator window = GetWindow<LevelCreator>();
         window.titleContent = new GUIContent("LevelCreator");
         window.minSize = new Vector2(370, 460);
+        window.maxSize = new Vector2(370, 460);
     }
 
     public void OnEnable()
     {
+        // Search for all game objects prefabs
         level = EditorGUIUtility.Load("Assets/Prefabs/Scenarios/Level.prefab") as GameObject;
         tile = EditorGUIUtility.Load("Assets/Prefabs/Scenarios/Floor.prefab") as GameObject;
         pivot = EditorGUIUtility.Load("Assets/Prefabs/Scenarios/Pivot.prefab") as GameObject;
         spawn = EditorGUIUtility.Load("Assets/Prefabs/Characters/XicoGuita.prefab") as GameObject;
         cheese = EditorGUIUtility.Load("Assets/Prefabs/Characters/Cheese.prefab") as GameObject;
+
         // Each editor window contains a root VisualElement object
         VisualElement root = rootVisualElement;
-
         // Import UXML
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/Editor/LevelCreator/LevelCreator.uxml");
+        VisualElement window = visualTree.CloneTree();
         // Import USS
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/LevelCreator/LevelCreator.uss");
-
-        VisualElement window = visualTree.CloneTree();
         window.styleSheets.Add(styleSheet);
+        // Add the UXML with USS to rootVisualElement     
         root.Add(window);
-        //Grid size fields
-        root.Q<IntegerField>("Y Size").value = y_Size;
-        root.Q<IntegerField>("X Size").value = x_Size;
-        root.Q<IntegerField>("Y Size").RegisterValueChangedCallback(e => y_Size = e.newValue <= 15? e.newValue : 15);
-        root.Q<IntegerField>("X Size").RegisterValueChangedCallback(e => x_Size = e.newValue <= 15? e.newValue : 15);
 
-        //Button grid creation
+        // Grid size fields
+        // Query for size integer fields, add a listener for changes on its fields and assign them to size variables
+        // -> Still in need to make this window data persistent
+        var y = root.Q<IntegerField>("Y Size");
+        var x = root.Q<IntegerField>("X Size");
+        x.RegisterValueChangedCallback(e => x_Size = e.newValue <= 15? e.newValue : 15);
+        y.RegisterValueChangedCallback(e => y_Size = e.newValue <= 15? e.newValue : 15);        
+
         SetupGridButton(root);
         root.Query<IntegerField>(className: "grid-input").ForEach(
             field => field.RegisterValueChangedCallback(
@@ -59,25 +64,28 @@ public class LevelCreator : EditorWindow
             )
         );
 
-        //Grid creation button method assigning
+        // Grid creation button method assigning
         var gridCreationButton = root.Q<Button>(className: "creation-button");
         gridCreationButton.clickable.clicked += () => BuildGrid();
     }
 
+    // Query for the Box element on the rootVisualElement and then instantiate the grid for map creation
     private void SetupGridButton(VisualElement root)
     {
         root.Q<Box>().Clear();
         gridMapping = new int[x_Size, y_Size];
+
         for(int y= 0; y < y_Size; y++)
         {
             var row = new VisualElement();
             row.AddToClassList("grid-row");
-            root.Q<Box>().Add(row);            
+            root.Q<Box>().Add(row);      
+
             for(int x = x_Size-1; x >= 0; x--)
             {
                 var button = new Button();
                 button.AddToClassList("grid");
-                button.text = "0";
+                button.text = gridMapping[x, y].ToString();
                 button.viewDataKey = x.ToString() + y.ToString();
                 button.clickable.clicked += () => GridClick(button);
                 row.Add(button);
@@ -85,6 +93,7 @@ public class LevelCreator : EditorWindow
         }
     }
 
+    // Get the current text from the button and change accordingly, along with USS classes to change its background colors
     private void GridClick(Button button)
     {
         int[] position = new int[2];
@@ -124,15 +133,19 @@ public class LevelCreator : EditorWindow
         }
     }
 
+    // Run for the gridMapping array reading each index value and instantiating the accordingly game object
     private void BuildGrid()
     {
+        // Delete the grid if there was one previously instantiated  
         DestroyGrid();
         
+        GameObject tiles = GameObject.Find("Tiles");
         GameObject newLevel = Instantiate(level, Vector3.zero, Quaternion.identity);
         newLevel.name = "Level";
-        GameObject tiles = GameObject.Find("Tiles");
+
         int pivotCount = 1;
         int cheeseCount = 1;
+
         for(int row = 0; row < x_Size; row++){
             GameObject parent = new GameObject();
             parent.name = "Row " + row;
@@ -140,12 +153,14 @@ public class LevelCreator : EditorWindow
             
             for(int column = 0; column < y_Size; column++){
                 int[] position = new int[2];
-                if(gridMapping[row,column] == 1 || gridMapping[row,column] == 2)
+
+                if(gridMapping[row,column] == 1 || gridMapping[row,column] == 2) // The Rat game object (no 2) can only spawn where there's also a tile
                 {
                     GameObject newTile = Instantiate(tile, new Vector3(column, 0, row), Quaternion.identity, parent.transform);
                     newTile.name = "Tile " + row + "-" + column;                
                     TileBehaviour tileBehaviour = newTile.GetComponent<TileBehaviour>();
                     setBoundaryWalls(tileBehaviour, row, column);
+
                     gridCreated = true;
                 }
                 if(gridMapping[row,column] == 2)
@@ -160,7 +175,7 @@ public class LevelCreator : EditorWindow
                 }
                 if(gridMapping[row,column] == 4)
                 {
-                    GameObject levelCheese = Instantiate(cheese, new Vector3(column, 0, row), Quaternion.identity, newLevel.transform);
+                    GameObject levelCheese = Instantiate(cheese, new Vector3(column, 0.25f, row), Quaternion.identity, newLevel.transform);
                     levelCheese.name = "Cheese-" + cheeseCount++;
                 }
             }
@@ -192,8 +207,8 @@ public class LevelCreator : EditorWindow
     {
         DeleteSpawn();
         if(gridCreated){
-            GameObject rat = Instantiate(spawn, new Vector3(y, 0.01f, x), Quaternion.Euler(0, (float)ratDirection, 0), level.transform);
-            rat.name = "XicoGuita";
+            GameObject rat = Instantiate(spawn, new Vector3(y, 0.01f, x), Quaternion.identity, level.transform);
+            rat.name = "Xico the Rat";
         }
     }
 

@@ -13,8 +13,8 @@ xsi:schemaLocation="
 >
     <engine:Label text="Grid Options" class="header"/>
     <engine:VisualElement class="size-container">
-        <editor:IntegerField label="X Size" name="X Size" class="grid-input" value="1"/>
-        <editor:IntegerField label="Y Size" name="Y Size" class="grid-input" value="1"/>
+        <editor:IntegerField label="X Size" name="X Size" viewDataKey="x_Size" class="grid-input"/>
+        <editor:IntegerField label="Y Size" name="Y Size" viewDataKey="y_Size" class="grid-input"/>
     </engine:VisualElement>
     <engine:Box class="grid-map"/>
     <engine:VisualElement class="legend-container">
@@ -24,7 +24,5 @@ xsi:schemaLocation="
         <engine:Label text="Cheese Spawn" class="cheese"/>
     </engine:VisualElement>
     <engine:Button class="creation-button" text="Generate Grid"/>
-    <editor:EnumField type="Enums.Direction" value="East"/>
-
-
+    
 </engine:UXML>
