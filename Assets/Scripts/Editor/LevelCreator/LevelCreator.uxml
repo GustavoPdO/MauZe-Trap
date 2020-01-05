@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+
+xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+xsi:schemaLocation="
+                        UnityEngine.UIElements ../../../../UIElementsSchema/UnityEngine.UIElements.xsd
+                        UnityEditor.UIElements ../../../../UIElementsSchema/UnityEditor.UIElements.xsd
+                        UnityEditor.PackageManager.UI ../../../../UIElementsSchema/UnityEditor.PackageManager.UI.xsd
+"
+>
+    <engine:Label text="Grid Options" class="header"/>
+    <engine:VisualElement class="size-container">
+        <editor:IntegerField label="X Size" name="X Size" viewDataKey="x_Size" class="grid-input"/>
+        <editor:IntegerField label="Y Size" name="Y Size" viewDataKey="y_Size" class="grid-input"/>
+    </engine:VisualElement>
+    <engine:Box class="grid-map"/>
+    <engine:VisualElement class="legend-container">
+        <engine:Label text="Grid Tile" class="tile"/>
+        <engine:Label text="Rat Spawn" class="rat"/>
+        <engine:Label text="Trail Corner" class="corner"/>
+        <engine:Label text="Cheese Spawn" class="cheese"/>
+    </engine:VisualElement>
+    <engine:Button class="creation-button" text="Generate Grid"/>
+    
+</engine:UXML>

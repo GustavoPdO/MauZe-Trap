@@ -1142,7 +1142,7 @@ MonoBehaviour:
   ratCollider: {fileID: 8429773095012858305}
   scoutTransform: {fileID: 1861588141807953756}
   isChasingCheese: 0
-  stopMoving: 0
+  allowMoving: 1
   direction: 1
   lastDirection: 0
   tileScout: {fileID: 0}
