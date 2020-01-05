@@ -139,9 +139,9 @@ public class LevelCreator : EditorWindow
         // Delete the grid if there was one previously instantiated  
         DestroyGrid();
         
-        GameObject tiles = GameObject.Find("Tiles");
-        GameObject newLevel = Instantiate(level, Vector3.zero, Quaternion.identity);
+        GameObject newLevel = Instantiate(level, Vector3.zero, Quaternion.identity); // This GO comes tagged as "Tiles"
         newLevel.name = "Level";
+        GameObject tiles = GameObject.Find("Tiles");
 
         int pivotCount = 1;
         int cheeseCount = 1;
